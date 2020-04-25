@@ -1,0 +1,59 @@
+<% include ../layouts/doctype.ejs %>
+
+
+
+    <table class="table table-striped">
+
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <!-- <th scope="col">Noms Annonceurs</th> -->
+                <th scope="col">Noms Campagnes</th>
+                <th scope="col">Date debut et fin campagne</th>
+                <th scope="col">Budget</th>
+                <th scope="col">Statut</th>
+                <th scope="col">Votre visuel</th>
+                <th scope="col">Format</th>
+                <th scope="col">Sites</th>
+                <th scope="col">Action</th>
+
+            </tr>
+        </thead>
+
+        <% for(let i=0; i < campagnes.length; i++) {%>
+        <tbody>
+            <tr>
+                <th scope="row"><%= campagnes[i].id %></th>
+                <td><%= campagnes[i].nom_campagne %></td>
+                <td><%= campagnes[i].date_d %>
+                    <br>
+                    <%= campagnes[i].date_f %>
+                </td>
+                <td><%= campagnes[i].budget %></td>
+                <td><%= campagnes[i].statut %></td>
+                <td><%= campagnes[i].id_visuels %></td>
+                <td><%= campagnes[i].id_formats %></td>
+                <td><%= campagnes[i].id_sites %></td>
+
+
+                <td>
+                    <a class="btn btn-sm btn-info" href="/campagne/detail/<%= campagnes[i].id %>" type="button"><i
+                            class="fas fa-eye"></i></a>
+
+                    <a class="btn btn-sm btn-warning" href="/campagne/edit/<%= campagnes[i].id %>"><i
+                            class="fa fa-pencil-alt"></i></a>
+
+                    <a class="btn btn-sm btn-danger" href="/campagne/delete/<%= campagnes[i].id %>" type="button"><i
+                            class="fas fa-times-circle"></i></a>
+                </td>
+
+
+
+            </tr>
+
+        </tbody>
+        <% } %>
+
+    </table>
+
+    <% include ../layouts/doctype_end.ejs %>

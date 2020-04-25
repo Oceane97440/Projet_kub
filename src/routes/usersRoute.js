@@ -26,7 +26,13 @@ router.post('/create', usersController.create);
  * Identification du user (login)
  * 
  */
+router.get('/login', usersController.login);
 
+/**
+ * @method GET
+ * @url /users/jsonList
+ */
+//router.get('/jsonList',usersController.jsonList)
 
 module.exports = router;
 

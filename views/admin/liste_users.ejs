@@ -1,22 +1,5 @@
-<!DOCTYPE html>
-<html lang="fr">
+<% include ../layouts/doctype.ejs %>
 
-<head>
-    <title><%= title %></title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Boutique" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
-</head>
-
-<body>
-
-
-
-
-    <div class="container">
 
         <h1>Liste users</h1>
 
@@ -47,15 +30,19 @@
                     <td><%= users[i].email %></td>
                     <td><%= users[i].profession %></td>
                     <td><%= users[i].telephone %></td>
-                    <td>Annonceurs</td>
-                    <td>Statut</td>
+                    <td><%= users[i].id_annonceurs %></td>
+                    <td><%= users[i].statut %></td>
 
                     <td>
+                        <a class="btn btn-sm btn-info" href="/admin/detail/<%= users[i].id %>" type="button"><i
+                                class="fas fa-eye"></i></a>
                         <a class="btn btn-sm btn-warning" href="/admin/edit/<%= users[i].id %>"><i
                                 class="fa fa-pencil-alt"></i></a>
 
                         <a class="btn btn-sm btn-danger" href="/admin/delete/<%= users[i].id %>" type="button"><i
                                 class="fas fa-times-circle"></i></a>
+
+
                     </td>
 
 
@@ -67,7 +54,4 @@
 
         </table>
 
-    </div>
-</body>
-
-</html>
+        <% include ../layouts/doctype_end.ejs %>

@@ -44,9 +44,11 @@ adminController.update = (req, res) => { // POST : admin/update/:id
             nom: req.body.nom_user,
             prenom: req.body.prenom_user,
             email: req.body.email_user,
-            password: req.body.password_user,
+          //  password: req.body.password_user,
             profession: req.body.profession_user,
-            telephone: req.body.telephone_user
+            telephone: req.body.telephone_user,
+            id_annonceurs: Number(req.body.user_annonceur),//choisir un annonceur
+            statut:req.body.statut
         }, {
             where:{
                 id:req.params.id
@@ -57,12 +59,6 @@ adminController.update = (req, res) => { // POST : admin/update/:id
 
 adminController.delete = (req, res) => { // GET : admin/delete/:id
 
-    // if (!req.session.user || req.session.user.role !== 1) {
-    //     error = {status: '403',message: 'Permission non accordée'}
-    //     return res.status(403).render('errors/index', {
-    //         title:'Permission non accordée'
-    //     });
-    // }
 
     User.destroy({
         where: {
@@ -74,6 +70,10 @@ adminController.delete = (req, res) => { // GET : admin/delete/:id
 }
 
 
+/**
+ * @method GET
+ * @url /campagne/jsonList
+ */
 
 
 
