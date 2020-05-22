@@ -14,7 +14,7 @@ router.get('/', usersController.index);
 /**
  * @request POST
  * @controller create
- * Ajout du users dans la bdd
+ * Identification du users dans la bdd
  * 
  */
 router.post('/create', usersController.create);
@@ -23,16 +23,33 @@ router.post('/create', usersController.create);
 /**
  * @request POST
  * @controller login
- * Identification du user (login)
+ * Page authentification du user (login)
  * 
  */
 router.get('/login', usersController.login);
 
+
 /**
- * @method GET
- * @url /users/jsonList
+ * @request POST
+ * @controller login
+ * Action authentification du user (login)
+ * 
  */
-//router.get('/jsonList',usersController.jsonList)
+router.post('/registre', usersController.registre);
+
+/**
+ * @request GET
+ * @controller auth
+ * Génère le token du user connecté
+ * 
+ */
+router.get('/auth', usersController.auth);
+
+
+router.get('/admin', usersController.admin);
+router.get('/logout', usersController.logout);
+
+
 
 module.exports = router;
 

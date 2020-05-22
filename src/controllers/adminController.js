@@ -1,9 +1,51 @@
 const adminController = {};
 const User = require('../models/users.js');
+const Campagne = require('../models/campagnes');
+const Visuels = require('../models/visuels');
+var Jwt = require('../middleware/utils');
 
 
-adminController.index=(req,res)=>{ // GET : /admin/
 
+/**
+ * Show the dashbord
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ *
+ * @memberof adminController
+ */
+adminController.index=(req,res)=>{// GET : /admin/
+    var headerAuth = req.headers['authorization'];
+   console.log(headerAuth)
+
+    var userId = Jwt.getUserId(headerAuth);
+    console.log(userId)
+    User.findOne({
+        /**affiche les élément du profil */
+         attributes: ['id', 'nom', 'prenom', 'profession', 'telephone','email'],
+         where:{
+             id:userId
+         }
+
+     }).then(user => {
+        console.log(user)
+
+        res.render('admin/dashboard',{
+            user: user,
+            title: "Dashboard_admin"
+        });console.log(user);
+    }); 
+
+}
+/**
+ * Listing user
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ *
+ * @memberof adminController
+ */
+adminController.utilisateurs=(req,res)=>{ // GET : /admin/utilisateurs
+
+    /**search l'ensemble des users dans la tables */
     User.findAll().then(users => {
         res.render('admin/liste_users',{
             users: users,
@@ -15,7 +57,13 @@ adminController.index=(req,res)=>{ // GET : /admin/
 
 }
 
-
+/**
+ * Edit un user
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ *
+ * @memberof adminController
+ */
 adminController.edit=(req,res)=>{ // GET : /admin/edit:id
 
   
@@ -33,7 +81,13 @@ adminController.edit=(req,res)=>{ // GET : /admin/edit:id
 
 }
 
-
+/**
+ * Action post edit du user
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ * @param - id: number
+ * @memberof adminController
+ */
 adminController.update = (req, res) => { // POST : admin/update/:id
     console.log(req.body);
 
@@ -44,19 +98,23 @@ adminController.update = (req, res) => { // POST : admin/update/:id
             nom: req.body.nom_user,
             prenom: req.body.prenom_user,
             email: req.body.email_user,
-          //  password: req.body.password_user,
             profession: req.body.profession_user,
             telephone: req.body.telephone_user,
-            id_annonceurs: Number(req.body.user_annonceur),//choisir un annonceur
             statut:req.body.statut
         }, {
             where:{
                 id:req.params.id
             }
-        }).then(res.redirect('/admin'))
+        }).then(res.redirect('/admin/utilisateurs'))
     })
 }
-
+/**
+ * Suppression d'un user
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ * @param - id: number
+ * @memberof adminController
+ */
 adminController.delete = (req, res) => { // GET : admin/delete/:id
 
 
@@ -65,19 +123,68 @@ adminController.delete = (req, res) => { // GET : admin/delete/:id
             id: req.params.id
         }
     }).then(() => {
-        res.redirect('/admin')
+        res.redirect('/admin/utilisateurs')
     })
 }
 
 
+
+adminController.campagne_admin = (req, res) => { // GET : admin/campagne/delete/:id
+
+    Campagne.findAll().then(campagnes => {
+        res.render('admin/liste_campagne', {
+            campagnes: campagnes,
+            title: "Listes des campagnes"
+        });
+    });
+
+}
 /**
- * @method GET
- * @url /campagne/jsonList
+ * Suppression d'une campagne
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ * @param - id: number
+ * @memberof adminController
  */
+adminController.delete_campagne = (req, res) => { // GET : /admin/campagne/delete/:id
 
+    Campagne.destroy({
+        where: {
+            id: req.params.id
+        }
+    }).then(() => {
+        res.redirect('/admin/campagnes')
+    })
+}
 
+adminController.visuels_admin = (req, res) => {
 
+    Visuels.findAll().then(visuels => {
+        res.render('admin/liste_visuels',{
+            visuels: visuels,
+           title: "Listes des visuels"
+        });
+    }); 
+     
 
+}
+/**
+ * Suppression d'un visuel
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ * @param - id: number
+ * @memberof adminController
+ */
+adminController.delete_visuels = (req, res) => { // GET : /admin/visuels/delete/:id
+
+    Visuels.destroy({
+        where: {
+            id: req.params.id
+        }
+    }).then(() => {
+        res.redirect('/admin/visuels')
+    })
+}
 
 
 

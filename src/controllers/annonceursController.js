@@ -1,8 +1,13 @@
 const annonceursController = {};
 const Annonceur = require('../models/annonceurs');
 
-
-annonceursController.index = (req, res) => { //GET:/sites
+/**
+ * 
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ * @memberof annonceursController
+ */
+annonceursController.index = (req, res) => { //GET:/annonceurs
 
     Annonceur.findAll().then(annonceurs => {
         res.render('annonceurs/listes_annonceurs', {
@@ -14,27 +19,32 @@ annonceursController.index = (req, res) => { //GET:/sites
 
 };
 
-annonceursController.add = (req, res) => { //GET:/annonceurs/add
 
 
-    res.render('annonceurs/add_annonceurs', {
-        title: "Formulaire ajout annonceurs"
-    });
-
-}
-
+/**
+ * 
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ * @memberof annonceursController
+ */
 annonceursController.create = (req, res) => { // POST : /annonceurs/create
     console.log(req.body);
     Annonceur.create({
         nom_societe: req.body.nom_societe,
-        nom_annonceur: req.body.nom_annonceur,
+       // nom_annonceur: req.body.nom_annonceur,
         statut: req.body.statut,
     }).then(res.redirect('/annonceurs'))
 }
 
 
 
-
+/**
+ * 
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ * @param - id: number
+ * @memberof annonceursController
+ */
 annonceursController.edit = (req, res) => { // GET : /annonceurs/edit:id
 
 
@@ -52,7 +62,12 @@ annonceursController.edit = (req, res) => { // GET : /annonceurs/edit:id
 
 
 }
-
+/**
+ * 
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ * @memberof annonceursController
+ */
 annonceursController.update = (req, res) => { // POST : annonceurs/update/:id
     //  console.log(req.body);
 
@@ -63,7 +78,7 @@ annonceursController.update = (req, res) => { // POST : annonceurs/update/:id
     }).then(annonceur => {
         Annonceur.update({
             nom_societe: req.body.nom_societe,
-            nom_annonceur: req.body.nom_annonceur,
+          //  nom_annonceur: req.body.nom_annonceur,
             statut: req.body.statut,
         }, {
             where: {
@@ -72,7 +87,13 @@ annonceursController.update = (req, res) => { // POST : annonceurs/update/:id
         }).then(res.redirect('/annonceurs'))
     })
 }
-
+/**
+ * 
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ * @param - id: number
+ * @memberof annonceursController
+ */
 annonceursController.delete = (req, res) => { // GET : annonceurs/delete/:id
 
     Annonceur.destroy({
@@ -85,8 +106,10 @@ annonceursController.delete = (req, res) => { // GET : annonceurs/delete/:id
 }
 
 /**
- * @method GET
- * @url /annonceurs/jsonList
+ * 
+ * @param {object} req Express request object
+ * @param {object} res Express response object
+ * @memberof annonceursController
  */
 annonceursController.jsonList = (req, res) => {
     Annonceur.findAll().then(annonceurs => {

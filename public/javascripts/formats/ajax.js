@@ -5,9 +5,10 @@ $(document).ready(function () {
     }
 
     function getFormats() {
-        $.get("/format/jsonList", function (formats) {
-            let options = "";
+        $.get("/admin/formats/jsonList", function (formats) {
+            let options = "<option selected>Selectionner votre format</option>";
             formats.data.forEach(format => {
+
                 options += `<option value="${format.id}">${format.nom_format}</option>`
             });
 
