@@ -1,5 +1,5 @@
 const annonceursController = {};
-const Annonceur = require('../models/annonceurs');
+const Annonceurs = require('../models/annonceurs');
 
 /**
  * 
@@ -9,7 +9,20 @@ const Annonceur = require('../models/annonceurs');
  */
 annonceursController.index = (req, res) => { //GET:/annonceurs
 
-    Annonceur.findAll().then(annonceurs => {
+    const headerAuth = req.headers['cookie'];
+
+    /**Utilise la fonction split pour séparer le userid et le token */
+    const token = headerAuth.split('=')
+    var userId = token[0];
+    if (userId <= 0) {
+        return res.send('utilisateur non trouvé')
+    }
+    Annonceurs.findAll({
+        where: {
+            id_users: userId
+        }
+
+    }).then(annonceurs => {
         res.render('annonceurs/listes_annonceurs', {
             annonceurs: annonceurs,
             title: "Listes des annonceurs"
@@ -28,11 +41,20 @@ annonceursController.index = (req, res) => { //GET:/annonceurs
  * @memberof annonceursController
  */
 annonceursController.create = (req, res) => { // POST : /annonceurs/create
-    console.log(req.body);
-    Annonceur.create({
+    const headerAuth = req.headers['cookie'];
+
+    /**Utilise la fonction split pour séparer le userid et le token */
+    const token = headerAuth.split('=')
+    var userId = token[0];
+    if (userId <= 0) {
+        return res.send('utilisateur non trouvé')
+    }
+    //  console.log(req.body);
+    Annonceurs.create({
         nom_societe: req.body.nom_societe,
-       // nom_annonceur: req.body.nom_annonceur,
-        statut: req.body.statut,
+        adresse: req.body.adresse,
+        id_users: userId
+
     }).then(res.redirect('/annonceurs'))
 }
 
@@ -48,12 +70,14 @@ annonceursController.create = (req, res) => { // POST : /annonceurs/create
 annonceursController.edit = (req, res) => { // GET : /annonceurs/edit:id
 
 
-    Annonceur.findOne({
+    Annonceurs.findOne({
         where: {
             id: req.params.id
         }
 
     }).then(annonceur => {
+      //  console.log(annonceur)
+
         res.render('annonceurs/edit_annonceurs', {
             annonceur: annonceur,
             title: "Edit annonceurs"
@@ -71,21 +95,26 @@ annonceursController.edit = (req, res) => { // GET : /annonceurs/edit:id
 annonceursController.update = (req, res) => { // POST : annonceurs/update/:id
     //  console.log(req.body);
 
-    Annonceur.findOne({
+    Annonceurs.findOne({
         where: {
             id: req.params.id
         }
     }).then(annonceur => {
-        Annonceur.update({
+       // console.log(annonceur)
+
+        Annonceurs.update({
             nom_societe: req.body.nom_societe,
-          //  nom_annonceur: req.body.nom_annonceur,
-            statut: req.body.statut,
+            adresse: req.body.adresse
+
+
         }, {
             where: {
                 id: req.params.id
             }
         }).then(res.redirect('/annonceurs'))
     })
+
+
 }
 /**
  * 
@@ -96,7 +125,7 @@ annonceursController.update = (req, res) => { // POST : annonceurs/update/:id
  */
 annonceursController.delete = (req, res) => { // GET : annonceurs/delete/:id
 
-    Annonceur.destroy({
+    Annonceurs.destroy({
         where: {
             id: req.params.id
         }
@@ -112,17 +141,17 @@ annonceursController.delete = (req, res) => { // GET : annonceurs/delete/:id
  * @memberof annonceursController
  */
 annonceursController.jsonList = (req, res) => {
-    Annonceur.findAll().then(annonceurs => {
-      //  console.log(annonceurs);
+    Annonceurs.findAll().then(annonceurs => {
+        //  console.log(annonceurs);
         try {
             res.json({
-                statut: "OK",
+                adresse: "OK",
                 data: annonceurs,
                 message: ""
             })
         } catch (error) {
             res.json({
-                statut: "KO",
+                adresse: "KO",
                 message: error
             })
         }

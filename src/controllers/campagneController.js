@@ -1,5 +1,9 @@
 const campagneController = {};
 const Campagne = require('../models/campagnes');
+const Formats = require('../models/formats');
+const Users = require('../models/users');
+const Sites = require('../models/sites');
+const Visuels = require('../models/visuels');
 
 /**
  * Listing campagne
@@ -10,7 +14,40 @@ const Campagne = require('../models/campagnes');
  */
 campagneController.index = (req, res) => { // GET : /campagne/
     //console.log(campagnes);
-    Campagne.findAll().then(campagnes => {
+
+    const headerAuth = req.headers['cookie'];
+
+    /**Utilise la fonction split pour séparer le userid et le token */
+    const token = headerAuth.split('=')
+    var userId = token[0];
+    if (userId <= 0) {
+        return res.send('utilisateur non trouvé')
+    }
+    Campagne.findAll({
+            where: {
+                id_users: userId
+            },
+            include: [{
+                    model: Users
+                },
+                {
+                    model: Formats
+                },
+                {
+                    model: Sites
+                },
+                {
+                    model: Visuels
+                }
+
+
+
+            ]
+
+        }
+
+
+    ).then(campagnes => {
         res.render('campagnes/liste_campagne', {
             campagnes: campagnes,
             title: "Listes des campagnes"
@@ -29,20 +66,49 @@ campagneController.index = (req, res) => { // GET : /campagne/
  * @memberof campagneController
  */
 campagneController.create = (req, res) => { // POST : /campagne/create
-    // console.log(req.body);
-    Campagne.create({
+    const headerAuth = req.headers['cookie'];
+
+    /**Utilise la fonction split pour séparer le userid et le token */
+    const token = headerAuth.split('=')
+    var userId = token[0];
+
+    var date_d = req.body.date_d
+    var date_f = req.body.date_f
+    var nbr_impressions = req.body.nbr_impressions
+
+    /**verifier si les champs ne son pas vide*/
+    if (date_d > date_f) {
+        return res.send('date invalide la date de debut est inférieur à la date du fin')
+    }
+
+    if (date_f == date_d) {
+        return res.send('date invalide la date de fin est égal à la date du début')
+    }
+    if (nbr_impressions <= 0) {
+        return res.send('Nombre impression est invalide')
+    }
+
+    // console.log(req.body.format_campagne)
+    //console.log(req.body.prix)
+
+    var campagne = Campagne.create({
         nom_campagne: req.body.nom_campagne,
-        date_d: req.body.date_d,
-        date_f: req.body.date_f,
-       // statut: req.body.statut,
-        id_formats: Number(req.body.format_campagne), /**choisir un format*/
-        id_visuels: Number(req.body.visuel_campagne), /**choisir votre visuel apres créaction*/
-        id_sites: Number(req.body.site_campagne) /**choisir son site de diffusion*/
+        date_d: date_d,
+        date_f: date_f,
+        id_visuels: Number(req.body.visuel_campagne),
+        /**choisir votre visuel apres créaction*/
+        id_sites: Number(req.body.site_campagne),
+        /**choisir son site de diffusion*/
+        id_formats: req.body.format_campagne,
+        /**choisir un format*/
+        nbr_impressions: nbr_impressions,
+        budget_total: req.body.nbr_impressions * req.body.prix * 1.2,
+        id_users: userId
 
 
     }).then(res.redirect('/campagne'))
-}
 
+}
 /**
  * 
  * @param {object} req Express request object
@@ -86,9 +152,11 @@ campagneController.update = (req, res) => { // POST : campagne/update/:id
             nom_campagne: req.body.nom_campagne,
             date_d: req.body.date_d,
             date_f: req.body.date_f,
-         //   statut: req.body.statut,
-            id_formats: Number(req.body.format_campagne), /**choisir un format*/
-            id_visuels: Number(req.body.visuel_campagne), /**choisir votre visuel apres créaction*/
+            //   statut: req.body.statut,
+            id_formats: Number(req.body.format_campagne),
+            /**choisir un format*/
+            id_visuels: Number(req.body.visuel_campagne),
+            /**choisir votre visuel apres créaction*/
             id_sites: Number(req.body.site_campagne) /**choisir son site de diffusion*/
 
         }, {
@@ -107,6 +175,7 @@ campagneController.update = (req, res) => { // POST : campagne/update/:id
  */
 campagneController.delete = (req, res) => { // GET : campagne/delete/:id
 
+
     Campagne.destroy({
         where: {
             id: req.params.id
@@ -115,6 +184,49 @@ campagneController.delete = (req, res) => { // GET : campagne/delete/:id
         res.redirect('/campagne')
     })
 }
+
+campagneController.recap = (req, res) => {
+
+
+    const headerAuth = req.headers['cookie'];
+
+    /**Utilise la fonction split pour séparer le userid et le token */
+    const token = headerAuth.split('=')
+    var userId = token[0];
+    // console.log(req.params.id)
+    Campagne.findOne({
+        where: {
+            id_users: userId,
+            id: req.params.id
+
+        },
+        include: [{
+                model: Users
+            },
+            {
+                model: Formats
+            },
+            {
+                model: Sites
+            },
+            {
+                model: Visuels
+            }
+
+
+
+        ]
+    }).then(campagne => {
+        console.log(campagne)
+        res.render('campagnes/recap', {
+            campagne: campagne,
+            title: "Listes des campagnes"
+        });
+    });
+
+
+}
+
 
 /**
  * 

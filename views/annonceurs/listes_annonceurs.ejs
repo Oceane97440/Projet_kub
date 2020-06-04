@@ -15,34 +15,27 @@
                 <div class="card-header">
                     <h4 class="card-title">
 
-                        Crée votre annonceurs
-
+                        Ajouter un annonceur
                     </h4>
                 </div>
                 <div id="collapse1" class="collapse show">
                     <div class="card-body">
                         <form action="/annonceurs/create" method="POST">
                             <div class="form-group">
-                                <label for="nom_societe">Nom de la societer :</label>
-                                <input type="text" class="form-control" name="nom_societe" id="nom_societe" />
+                                <label for="nom_societe">Nom de la société :</label>
+                                <input type="text" class="form-control" name="nom_societe" id="nom_societe"   required />
                             </div>
                             <div class="form-group">
-                                <label for="nom_annonceur">Nom de l'annonceur :</label>
-                                <input type="text" class="form-control" name="nom_annonceur" id="nom_annonceur" />
+                                <label for="adresse">Adresse de la société :</label>
+                                <input type="text" class="form-control" name="adresse" id="adresse"   required />
                             </div>
-                            <!-- <div class="form-group">
-                                <label for="active-categorie">Statut :</label>
-                                <select name="statut" class="form-control" id="active-categorie">
-                                    <option value="0">Inactif</option>
-                                    <option value="1">Actif</option>
-                                </select>
-                            </div> -->
+                
 
 
                             </div>
                             <div class="mt-5">
                                 <div class="card-footer bg-transparent border-success justify-content-center d-flex">
-                                    <button type="submit" class="btn btn-success">Créer</button>
+                                    <button type="submit" class="btn btn-success">Ajouter un annonceur</button>
                                 </div>
                             </div>
 
@@ -57,8 +50,8 @@
                     <thead class="thead-dark" >
                       <tr>
                           <th scope="col">#</th>
-                          <th scope="col">Noms du societer</th>
-                          <th scope="col">Status</th>
+                          <th scope="col">Nom de la société </th>
+                          <th scope="col">Adresse  de la société</th>
                           <th scope="col">Action</th>
       
       
@@ -69,7 +62,8 @@
                             <tr>
                                 <th scope="row"><%= annonceurs[i].id %></th>
                                 <td><%= annonceurs[i].nom_societe %></td>
-                                <td><%= annonceurs[i].statut %></td>
+                                <td><%= annonceurs[i].adresse %></td>
+
                     
             
                                 <td>
